@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Get your website links Shortened!!</title>
+
+    <link rel="stylesheet" type="text/css" href="style/style.css" />
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet">
+
+    <link rel="shortcut icon" href="">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap-theme.min.css">
+
+
+    <!--[if IE]>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <style>
+        html,
+        body {
+            padding: 0;
+            margin: 0;
+
+        }
+
+        body {
+            background: url(img/sdf.jpg) no-repeat center center fixed;
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+            background-size: cover;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="main" class="container1 d-flex" style="justify-content: center;">
+        <div class="row">
+            <div class="col-12">
+
+
+                <div class="card" style="border-radius: 0px; box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);">
+                    <div class="card-header" style="background-color: #213453; color: white;">
+                        Get your website link shortened or expanded
+                    </div>
+
+
+                    <div class="card-body">
+                        <h5 class="card-title" id="">Please enter/paste your website</h5>
+                        <p class="card-text" id="">You can shorten and expand your url here</p>
+                        <form id="form" autocomplete="off" class="form-inline d-felx justify-content-center">
+                            <div class="form-group">
+                                <label for="inputPassword2" class="sr-only">Your Url Link:</label>
+                                <input id="input" type="text" value="" class="form-control">
+                            </div>
+
+                        </form>
+                        <div id="responseField" class="border">
+                        </div>
+
+
+                        <div class="card-footer d-flex justify-content-center" style="background: none;">
+                            <button type="button" class="btn btn-primary" id="expand">Expand</button>
+                            <hr />
+                            <button id="shorten" type="button" class="btn btn-primary">Shorten</button>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <script>    
+        const apiKey = 'AIzaSyCxhNsopuSURTgIsVbqopQ0BwY4BGj4KJ4';
+        const url = 'https://www.googleapis.com/urlshortener/v1/url';
+        const projection = 'FULL';
+
+        // Some page elements
+
+        const $inputField = $('#input');
+        const $shortenButton = $('#shorten');
+        const $expandButton = $('#expand');
+        const $responseField = $('#responseField');
+
+        // AJAX functions
+
+        function expandUrl() {
+            const urlToExpand = url + '?key=' + apiKey + '&shortUrl=' + $inputField.val();
+            //Refactoring using get method call
+            $.getJSON(urlToExpand, response => { $responseField.append('<p>Your expanded url is: </p><p>' + response.longUrl + '</p>'); });
+        }
+
+        function shortenUrl() {
+            const urlWithKey = url + '?key=' + apiKey; //includes our apikey at the end of the URL
+            const urlToShorten = $inputField.val();
+            //this grabs what the user enters in to the input field
+            //refactoring using post call method
+            $.post({
+                url: urlWithKey,
+                data: JSON.stringify({ longUrl: urlToShorten }),
+                contentType: 'application/json',
+                success(response) {
+                    console.log(response);
+                    $responseField.append('<p>Your shortened url is: </p><p>' + response.id + '</p>');
+                },
+                error(jqXHR, status, errorThrown) {
+                    console.log(jqXHR);
+                }
+
+            });
+        }
+
+        function expand() {
+            $responseField.empty();
+            expandUrl();
+            return false;
+        }
+
+        function shorten() {
+            $responseField.empty();
+            shortenUrl();
+            return false;
+        }
+
+        // Call functions on submit
+
+        $expandButton.click(expand);
+        $shortenButton.click(shorten);
+    </script>
+    <script src='https://code.jquery.com/jquery-3.1.0.min.js'></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>
